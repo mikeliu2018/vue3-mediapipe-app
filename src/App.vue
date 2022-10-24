@@ -1,10 +1,20 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
+// import HelloWorld from "./components/HelloWorld.vue";
+import SignoutButton from "./components/SignoutButton.vue";
+import { LogService } from "@/services";
+
+onMounted(() => {
+  const innerWidth = window.innerWidth;
+  const innerHeight = window.innerHeight;
+  LogService.debug_log(`innerWidth`, innerWidth);
+  LogService.debug_log(`innerHeight`, innerHeight);
+});
 </script>
 
 <template>
-  <header>
+  <!-- <header>
     <img
       alt="Vue logo"
       class="logo"
@@ -21,8 +31,20 @@ import HelloWorld from "./components/HelloWorld.vue";
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
-  </header>
+  </header> -->
 
+  <div class="wrapper">
+    <nav>
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/face-detection">Face detection</RouterLink>
+      <RouterLink to="/face-mesh">Face mesh</RouterLink>
+      <RouterLink to="/hands">Hands</RouterLink>
+      <RouterLink to="/pose">Pose</RouterLink>
+      <RouterLink to="/holistic">Holistic</RouterLink>
+      <SignoutButton></SignoutButton>
+    </nav>
+  </div>
   <RouterView />
 </template>
 
@@ -37,10 +59,16 @@ header {
   margin: 0 auto 2rem;
 }
 
+/* .wrapper {
+  text-align: center;
+  align-items: center;
+} */
+
 nav {
   width: 100%;
   font-size: 12px;
   text-align: center;
+  align-items: center;
   margin-top: 2rem;
 }
 
@@ -53,7 +81,7 @@ nav a.router-link-exact-active:hover {
 }
 
 nav a {
-  display: inline-block;
+  /* display: inline-block; */
   padding: 0 1rem;
   border-left: 1px solid var(--color-border);
 }
@@ -80,11 +108,11 @@ nav a:first-of-type {
   }
 
   nav {
-    text-align: left;
-    margin-left: -1rem;
+    text-align: center;
+    /* margin-left: -1rem; */
     font-size: 1rem;
-
-    padding: 1rem 0;
+    width: 80vw;
+    /* padding: 1rem 0; */
     margin-top: 1rem;
   }
 }

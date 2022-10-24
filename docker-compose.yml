@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    entrypoint:      
+      - /usr/src/app/docker/nginx/run.sh
+    depends_on:
+      - vue3-mediapipe-app    
+    networks:
+      - default
+      - app_net
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      # - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+    volumes_from:
+      - vue3-mediapipe-app:ro
+
+  vue3-mediapipe-app:
+    build:
+      context: ./
+      dockerfile: ./docker/vue3-mediapipe-app/Dockerfile
+    container_name: vue3-mediapipe-app
+    entrypoint:      
+      - /usr/src/app/docker/vue3-mediapipe-app/run.sh    
+    image: tomatox/vue3-mediapipe-app    
+    ports:
+      - 4173:4173
+      - 5173:5173
+    user: 1000:1000
+    volumes:
+      - .:/usr/src/app      
+    networks:
+      - default
+      - app_net  
+    # restart: unless-stopped
+    # working_dir: '/var/www/html'    
+    # tty: true
+
+networks:
+  default:
+    driver: bridge    
+  app_net:
+    external: true
+  # sail:
+  #   driver: bridge
