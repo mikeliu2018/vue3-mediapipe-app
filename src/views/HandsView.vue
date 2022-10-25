@@ -5,7 +5,7 @@
       <video class="input_video" ref="source" v-show="false"></video>
       <canvas
         class="output_canvas"
-        :class="{ loading_canvas: loading_canvas }"
+        :class="{ loading_canvas: loadingCanvas }"
         v-bind:style="{
           width: `${canvasWidth}px`,
           height: `${canvasHeight}px`,
@@ -22,7 +22,7 @@ import { HandsService, LogService } from "@/services";
 const source = ref<InstanceType<typeof HTMLVideoElement> | null>(null);
 const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
 const logService = new LogService();
-const loading_canvas = ref(true);
+const loadingCanvas = ref(true);
 
 const canvasWidth = computed(() => {
   return window.innerWidth * 0.7;
@@ -42,7 +42,8 @@ onMounted(() => {
       canvas.value,
       source.value,
       canvasWidth.value,
-      canvasHeight.value
+      canvasHeight.value,
+      loadingCanvas
     ).setOptions({
       maxNumHands: 2,
       modelComplexity: 1,

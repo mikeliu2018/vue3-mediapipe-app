@@ -6,6 +6,7 @@ import { FaceDetection } from "@mediapipe/face_detection";
 import { LogService } from "./log.service";
 import { WebsocketBuilder } from "websocket-ts";
 import { useAuthStore } from "@/stores";
+import type { Ref } from "vue";
 // import { RootState } from "@/store/types";
 // import { Getter, Action } from "vuex-class";
 
@@ -15,7 +16,6 @@ export class FaceDetectionService extends Camera {
       `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.4/${file}`,
   });
 
-  private canvasLoaded: boolean = false;
   private readonly ctx: CanvasRenderingContext2D;
   private logService = new LogService();
 
@@ -45,7 +45,8 @@ export class FaceDetectionService extends Camera {
     public readonly source: HTMLVideoElement,
     public readonly canvasWidth: number,
     public readonly canvasHeight: number,
-    public readonly landmarkContainer: HTMLDivElement
+    public readonly landmarkContainer: HTMLDivElement,
+    public readonly loadingCanvas: Ref<boolean>
   ) {
     super(source, {
       onFrame: async () => await this.pipe.send({ image: source }),
@@ -72,9 +73,9 @@ export class FaceDetectionService extends Camera {
   }
 
   public render({ detections, image }: Results): void {
-    if (!this.canvasLoaded) {
-      this.canvasLoaded = true;
-      this.logService.debug_log("this.canvasLoaded = true;");
+    if (this.loadingCanvas.value) {
+      this.loadingCanvas.value = false;
+      this.logService.debug_log("this.loadingCanvas.value is change.");
       this.ws.build();
     }
 

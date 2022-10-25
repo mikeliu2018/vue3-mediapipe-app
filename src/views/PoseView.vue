@@ -5,7 +5,7 @@
       <video class="input_video" ref="source" v-show="false"></video>
       <canvas
         class="output_canvas"
-        :class="{ loading_canvas: loading_canvas }"
+        :class="{ loading_canvas: loadingCanvas }"
         :width="canvasWidth"
         :height="canvasHeight"
         ref="canvas"
@@ -22,7 +22,7 @@ const source = ref<InstanceType<typeof HTMLVideoElement> | null>(null);
 const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
 const landmarkContainer = ref<InstanceType<typeof HTMLDivElement> | null>(null);
 const logService = new LogService();
-const loading_canvas = ref(true);
+const loadingCanvas = ref(true);
 
 const canvasWidth = computed(() => {
   return window.innerWidth * 0.7;
@@ -44,7 +44,8 @@ onMounted(async () => {
       source.value,
       canvasWidth.value,
       canvasHeight.value,
-      landmarkContainer.value
+      landmarkContainer.value,
+      loadingCanvas
     ).setOptions({
       modelComplexity: 1,
       smoothLandmarks: true,

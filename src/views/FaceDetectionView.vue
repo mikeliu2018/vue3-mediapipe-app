@@ -5,7 +5,7 @@
       <video class="input_video" ref="source" v-show="false"></video>
       <canvas
         class="output_canvas"
-        :class="{ loading_canvas: loading_canvas }"
+        :class="{ loading_canvas: loadingCanvas }"
         :width="canvasWidth"
         :height="canvasHeight"
         ref="canvas"
@@ -16,13 +16,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onActivated, computed } from "vue";
+import { ref, onMounted, onActivated, computed, watch } from "vue";
 import { FaceDetectionService, LogService } from "@/services";
 const source = ref<InstanceType<typeof HTMLVideoElement> | null>(null);
 const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
 const landmarkContainer = ref<InstanceType<typeof HTMLDivElement> | null>(null);
 const logService = new LogService();
-const loading_canvas = ref(true);
+const loadingCanvas = ref(true);
+
+watch(loadingCanvas, async (newLoadingCanvas, oldLoadingCanvas) => {
+  logService.debug_log(
+    "oldLoadingCanvas: ",
+    oldLoadingCanvas ? "true" : "false"
+  );
+  logService.debug_log(
+    "newLoadingCanvas: ",
+    newLoadingCanvas ? "true" : "false"
+  );
+});
 
 const canvasWidth = computed(() => {
   return window.innerWidth * 0.7;
@@ -44,14 +55,15 @@ onMounted(() => {
       source.value,
       canvasWidth.value,
       canvasHeight.value,
-      landmarkContainer.value
+      landmarkContainer.value,
+      loadingCanvas
       // this.grid
     ).setOptions({
       // modelSelection: 1,
       // minDetectionConfidence: 0.5,
       // selfieMode: true,
       model: "short",
-      selfieMode: false,
+      selfieMode: true,
       // model: "full-range.dense",
       minDetectionConfidence: 0.5,
     });
